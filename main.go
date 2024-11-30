@@ -14,66 +14,58 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	conn   *websocket.Conn
-	userId string
-	room   string // lobby or game-{id}
-}
-
-type Message struct {
-	Name    string `json:"name"`
-	Message string `json:"message"`
-	Room    string `json:"room"` // lobby or game-{id}
+	conn *websocket.Conn
+	room string
 }
 
 var (
 	clients   = make(map[*Client]bool)
-	broadcast = make(chan Message)
+	broadcast = make(chan []byte)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Printf("Failed to upgrade connection: %v", err)
 		return
 	}
-	defer conn.Close()
+	defer ws.Close()
 
 	room := r.URL.Query().Get("room")
-	userId := r.URL.Query().Get("userId")
+	log.Printf("New connection in room: %s", room)
 
-	client := &Client{conn: conn, userId: userId, room: room}
+	client := &Client{conn: ws, room: room}
 	clients[client] = true
+	log.Printf("Client connected to room %s. Total clients: %d", room, len(clients))
+	defer delete(clients, client)
 
 	for {
-		var msg Message
-		err := conn.ReadJSON(&msg)
+		_, msg, err := ws.ReadMessage()
 		if err != nil {
-			log.Printf("Failed to read message from client %s in room %s: %v", userId, room, err)
-			return
+			log.Printf("Error reading message from client in room %s: %v", room, err)
+			break
 		}
-		msg.Room = client.room
+		log.Printf("Received message in room %s: %s", room, string(msg))
 		broadcast <- msg
 	}
 }
 
 func handleMessages() {
-	for {
-		msg := <-broadcast
-
+	for msg := range broadcast {
+		log.Printf("Broadcasting message: %s", string(msg))
 		for client := range clients {
-			if client.room == msg.Room {
-				err := client.conn.WriteJSON(msg)
-				if err != nil {
-					log.Printf("Failed to write message to client %s in room %s: %v", client.userId, client.room, err)
-					client.conn.Close()
-					delete(clients, client)
-				}
+			err := client.conn.WriteMessage(websocket.TextMessage, msg)
+			if err != nil {
+				log.Printf("Error broadcasting to client in room %s: %v", client.room, err)
+				client.conn.Close()
+				delete(clients, client)
 			}
 		}
 	}
 }
 
 func main() {
+	log.Printf("Initializing WebSocket server...")
 	http.HandleFunc("/chat", handleConnections)
 	go handleMessages()
 
