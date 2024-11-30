@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -18,9 +19,15 @@ type Client struct {
 	room string
 }
 
+type Message struct {
+	Name    string    `json:"name"`
+	Message string    `json:"message"`
+	SentAt  time.Time `json:"sentAt"`
+}
+
 var (
 	clients   = make(map[*Client]bool)
-	broadcast = make(chan []byte)
+	broadcast = make(chan Message)
 )
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -40,21 +47,25 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	defer delete(clients, client)
 
 	for {
-		_, msg, err := ws.ReadMessage()
+		var msg Message
+		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Printf("Error reading message from client in room %s: %v", room, err)
 			break
 		}
-		log.Printf("Received message in room %s: %s", room, string(msg))
+		if msg.SentAt.IsZero() {
+			msg.SentAt = time.Now().UTC()
+		}
+		log.Printf("Received message in room %s: %v", room, msg)
 		broadcast <- msg
 	}
 }
 
 func handleMessages() {
 	for msg := range broadcast {
-		log.Printf("Broadcasting message: %s", string(msg))
+		log.Printf("Broadcasting message: %v", msg)
 		for client := range clients {
-			err := client.conn.WriteMessage(websocket.TextMessage, msg)
+			err := client.conn.WriteJSON(msg)
 			if err != nil {
 				log.Printf("Error broadcasting to client in room %s: %v", client.room, err)
 				client.conn.Close()
