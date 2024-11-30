@@ -6,8 +6,10 @@ A simple WebSocket server written in Go that handles real-time chat functionalit
 
 - Real-time messaging using WebSockets
 - Support for multiple chat rooms
-- Message broadcasting
-- Connection logging
+- Message broadcasting to all clients
+- Automatic connection management
+- Built-in logging
+- UTC timestamp for messages
 
 ## Setup
 
@@ -31,18 +33,56 @@ Connect to the WebSocket server using:
 ws://localhost:8080/chat?room={room-name}
 ```
 
-Where `{room-name}` can be:
-- `lobby` for main chat
-- `game-{id}` for game rooms
+The server accepts messages in JSON format with the following structure:
+```json
+{
+  "name": "username",
+  "message": "message content",
+  "sentAt": "2024-01-01T12:00:00Z"  // Optional, server will set if not provided
+}
+```
 
-## Example Client Connection
+## Example Client Implementation
 
 ```javascript
 const ws = new WebSocket(`ws://localhost:8080/chat?room=lobby`);
 
-ws.onmessage = (event) => {
-  console.log('Received:', event.data);
+ws.onopen = () => {
+  console.log('Connected to chat server');
 };
 
-ws.send("Hello!");
+ws.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+  console.log('Received:', message);
+};
+
+// Send a message
+ws.send(JSON.stringify({
+  name: "User",
+  message: "Hello, everyone!",
+}));
+
+ws.onclose = () => {
+  console.log('Disconnected from chat server');
+};
 ```
+
+## Server Details
+
+- The server automatically handles WebSocket upgrades
+- All messages are broadcasted to all connected clients
+- Connections are automatically cleaned up when clients disconnect
+- Messages include UTC timestamps
+- Server logs all connections and message activities
+
+## Error Handling
+
+The server includes robust error handling for:
+- Connection upgrades
+- Message reading/writing
+- Client disconnections
+- JSON parsing/formatting
+
+## Security Note
+
+The current implementation allows all origins (`CheckOrigin` returns true). For production use, you should implement proper origin checking based on your requirements.
