@@ -1,10 +1,9 @@
-import { AppSidebar } from "@/components/app-sidebar";
+import { Empty } from "@/components/empty";
 
 export default function Page() {
   return (
-    <>
-      <AppSidebar />
-      <p>hi</p>
-    </>
+    <div className="p-10 w-full">
+      <Empty />
+    </div>
   );
 }
