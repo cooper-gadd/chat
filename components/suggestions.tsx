@@ -61,7 +61,7 @@ const suggestions: Suggestion[] = [
   },
 ];
 
-export function Empty() {
+export function Suggestions() {
   const [selected, setSelected] = useState<string>(suggestions[0].title);
 
   const suggestionOptions = suggestions.find(
@@ -69,10 +69,7 @@ export function Empty() {
   )?.options;
 
   return (
-    <div className="flex flex-col min-h-screen gap-4 justify-center">
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
-        How can I help today?
-      </h1>
+    <>
       <div className="flex gap-2">
         {suggestions.map((suggestion) => (
           <Button
@@ -96,6 +93,6 @@ export function Empty() {
           </p>
         ))}
       </div>
-    </div>
+    </>
   );
 }
