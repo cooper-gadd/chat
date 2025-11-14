@@ -47,5 +47,5 @@ export async function login({ username, password: plainPassword }: LoginProps) {
     expiresAt: twoDays,
   });
 
-  redirect("/chat");
+  redirect("/");
 }

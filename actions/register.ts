@@ -44,5 +44,5 @@ export async function register({ createUser }: RegisterProps) {
     expiresAt: twoDays,
   });
 
-  redirect("/chat");
+  redirect("/");
 }
