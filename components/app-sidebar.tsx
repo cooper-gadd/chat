@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar variant="inset">
       <SidebarHeader>
         <span className="text-lg font-medium text-center">Chat</span>
         <Button asChild>
