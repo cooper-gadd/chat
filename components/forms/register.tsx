@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import { register } from "@/actions/register";
-import { register as registerSchema } from "@/schemas/register";
+import { registerSchema } from "@/schemas/register";
 import { toast } from "sonner";
 
 export function RegisterForm() {

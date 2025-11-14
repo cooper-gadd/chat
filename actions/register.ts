@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { CreateUser, sessions, users } from "@/db/schema";
-import { register as registerSchema } from "@/schemas/register";
+import { registerSchema } from "@/schemas/register";
 import { Cookie, password, randomUUIDv7 } from "bun";
 import { redirect } from "next/navigation";
 

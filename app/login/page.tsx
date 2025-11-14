@@ -6,24 +6,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { RegisterForm } from "@/components/forms/register";
+import { LoginForm } from "@/components/forms/login";
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <Card className="mx-auto min-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your information to create an account.
+            Enter your username and password to chat.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <RegisterForm />
+          <LoginForm />
           <div className="mt-4 text-center text-sm">
-            Have an account?{" "}
-            <Link href="/login" className="underline">
-              Login
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="underline">
+              Sign up
             </Link>
           </div>
         </CardContent>
