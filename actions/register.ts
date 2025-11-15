@@ -6,11 +6,7 @@ import { registerSchema } from "@/schemas/register";
 import { Cookie, password, randomUUIDv7 } from "bun";
 import { redirect } from "next/navigation";
 
-interface RegisterProps {
-  createUser: CreateUser;
-}
-
-export async function register({ createUser }: RegisterProps) {
+export async function register({ createUser }: { createUser: CreateUser }) {
   registerSchema.parse(createUser);
 
   const existingUser = await db.query.users.findFirst({

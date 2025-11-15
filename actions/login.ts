@@ -7,12 +7,13 @@ import { Cookie, password, randomUUIDv7 } from "bun";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
-interface LoginProps {
+export async function login({
+  username,
+  password: plainPassword,
+}: {
   username: string;
   password: string;
-}
-
-export async function login({ username, password: plainPassword }: LoginProps) {
+}) {
   loginSchema.parse({
     username,
     plainPassword,
