@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { CurrentUser } from "@/actions/get-current-user";
+import { logout } from "@/actions/logout";
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
@@ -80,7 +81,11 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                await logout();
+              }}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

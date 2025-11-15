@@ -3,21 +3,21 @@
 import { db } from "@/db";
 import { sessions } from "@/db/schema";
 import { loginSchema } from "@/schemas/login";
-import { password, randomUUIDv7 } from "bun";
+import { password as bunPassword, randomUUIDv7 } from "bun";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function login({
   username,
-  password: plainPassword,
+  password,
 }: {
   username: string;
   password: string;
 }) {
   loginSchema.parse({
     username,
-    plainPassword,
+    password,
   });
 
   const user = await db.query.users.findFirst({
@@ -28,7 +28,7 @@ export async function login({
     return { success: false, error: "Invalid username" };
   }
 
-  const isValidPassword = await password.verify(plainPassword, user.password);
+  const isValidPassword = await bunPassword.verify(password, user.password);
 
   if (!isValidPassword) {
     return { success: false, error: "Invalid password" };
