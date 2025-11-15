@@ -13,9 +13,8 @@ export function AppSidebar() {
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <span className="text-lg font-medium text-center">Chat</span>
         <Button asChild>
-          <Link href="/chat">New Chat</Link>
+          <Link href="/">New Chat</Link>
         </Button>
       </SidebarHeader>
       <SidebarContent>
