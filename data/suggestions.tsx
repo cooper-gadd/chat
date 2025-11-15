@@ -21,7 +21,7 @@ export const suggestions: Suggestion[] = [
     icon: CodeIcon,
     options: [
       "How to center a div",
-      "Why is Rust so hard to learn",
+      "Why does Rust look so strange",
       "Can I uninstall Node and just use Bun",
       "What is TanStack Start",
     ],
