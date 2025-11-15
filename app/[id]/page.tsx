@@ -1,3 +1,4 @@
+import { ChatInput } from "@/components/chat-input";
 import { cn } from "@/lib/utils";
 
 export default async function Page({
@@ -26,21 +27,26 @@ export default async function Page({
   ];
 
   return (
-    <main className="p-3 md:p-5 flex flex-col overflow-x-hidden">
-      <div className="space-y-4">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={cn(
-              "flex max-w-[75%] md:max-w-3xl flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word",
-              message.role === "user"
-                ? "ml-auto bg-primary text-primary-foreground"
-                : "bg-muted",
-            )}
-          >
-            {message.content}
-          </div>
-        ))}
+    <main className="flex h-full justify-center p-3 md:p-5 w-full flex-col overflow-x-hidden">
+      <div className="flex-1 overflow-y-auto w-full max-w-3xl mx-auto">
+        <div className="space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={cn(
+                "flex max-w-[85%] md:max-w-3xl flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word",
+                message.role === "user"
+                  ? "ml-auto bg-primary text-primary-foreground"
+                  : "bg-muted",
+              )}
+            >
+              {message.content}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="w-full max-w-3xl mx-auto">
+        <ChatInput />
       </div>
     </main>
   );
