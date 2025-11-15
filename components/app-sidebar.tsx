@@ -8,8 +8,9 @@ import { NavUser } from "./nav-user";
 import { NavItems } from "./nav-items";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { CurrentUser } from "@/actions/get-current-user";
 
-export function AppSidebar() {
+export function AppSidebar({ currentUser }: { currentUser: CurrentUser }) {
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
@@ -21,12 +22,7 @@ export function AppSidebar() {
         <NavItems />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            name: "Cooper",
-            email: "cooper@me.com",
-          }}
-        />
+        <NavUser currentUser={currentUser} />
       </SidebarFooter>
     </Sidebar>
   );

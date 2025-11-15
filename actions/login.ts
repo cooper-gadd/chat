@@ -3,8 +3,9 @@
 import { db } from "@/db";
 import { sessions } from "@/db/schema";
 import { loginSchema } from "@/schemas/login";
-import { Cookie, password, randomUUIDv7 } from "bun";
+import { password, randomUUIDv7 } from "bun";
 import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function login({
@@ -37,8 +38,9 @@ export async function login({
 
   const token = randomUUIDv7();
   const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 days
+  const cookieStore = await cookies();
 
-  new Cookie("session", token, {
+  cookieStore.set("session", token, {
     expires: twoDays,
   });
 

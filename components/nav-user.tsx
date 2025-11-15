@@ -2,7 +2,7 @@
 
 import { ChevronsUpDown, GithubIcon, LogOut } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,15 +19,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { CurrentUser } from "@/actions/get-current-user";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-  };
-}) {
+export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -41,14 +35,13 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={`https://avatar.vercel.sh/${user.name}`}
-                  alt={user.name}
+                  src={`https://avatar.vercel.sh/${currentUser.name}`}
+                  alt={currentUser.name}
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{currentUser.name}</span>
+                <span className="truncate text-xs">{currentUser.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -63,14 +56,17 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={`https://avatar.vercel.sh/${user.name}`}
-                    alt={user.name}
+                    src={`https://avatar.vercel.sh/${currentUser.name}`}
+                    alt={currentUser.name}
                   />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">
+                    {currentUser.name}
+                  </span>
+                  <span className="truncate text-xs">
+                    {currentUser.username}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>

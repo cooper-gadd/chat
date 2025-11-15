@@ -3,7 +3,8 @@
 import { db } from "@/db";
 import { CreateUser, sessions, users } from "@/db/schema";
 import { registerSchema } from "@/schemas/register";
-import { Cookie, password, randomUUIDv7 } from "bun";
+import { password, randomUUIDv7 } from "bun";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function register({ createUser }: { createUser: CreateUser }) {
@@ -29,8 +30,9 @@ export async function register({ createUser }: { createUser: CreateUser }) {
 
   const token = randomUUIDv7();
   const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 days
+  const cookieStore = await cookies();
 
-  new Cookie("session", token, {
+  cookieStore.set("session", token, {
     expires: twoDays,
   });
 
