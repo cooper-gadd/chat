@@ -71,6 +71,7 @@ export const threads = pgTable(
         onUpdate: "cascade",
       })
       .notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
     parentThreadId: integer("parent_thread_id"), //for branching off referencing
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -93,30 +94,28 @@ export type CreateThread = InferInsertModel<typeof threads>;
 export type Thread = InferSelectModel<typeof threads>;
 export type UpdateThread = Partial<CreateThread>;
 
-export const roleEnum = pgEnum("role", ["user", "assistant"]);
+export const roleEnum = pgEnum("role", ["user", "assistant", "system"]);
 
 export const messages = pgTable(
   "message",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    threadId: integer("thread_id").references(() => threads.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
+    threadId: integer("thread_id")
+      .references(() => threads.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      })
+      .notNull(),
     role: roleEnum("role").notNull(),
     content: text("content").notNull(),
-    sequence: integer("sequence").default(0).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  (t) => [
-    index("message_id_index").on(t.id),
-    index("message_id_sequence").on(t.sequence),
-  ],
+  (t) => [index("message_id_index").on(t.id)],
 );
 
 export const messageRelations = relations(messages, ({ one }) => ({
-  threads: one(threads, {
+  thread: one(threads, {
     fields: [messages.threadId],
     references: [threads.id],
   }),
