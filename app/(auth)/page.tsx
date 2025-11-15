@@ -16,6 +16,11 @@ export default function Page() {
   const { messages, sendMessage } = useChat({ experimental_throttle: 50 });
   const [input, setInput] = useState("");
 
+  function send() {
+    sendMessage({ text: input });
+    setInput("");
+  }
+
   return (
     <main className="flex h-full justify-center items-center p-3 md:p-5 w-full flex-col">
       {messages.length > 0 ? (
@@ -50,13 +55,18 @@ export default function Page() {
       ) : (
         <Empty setInput={setInput} />
       )}
-      <div className="w-full max-w-3xl">
+      <form className="w-full max-w-3xl" onSubmit={() => send()}>
         <InputGroup className="max-w-3xl">
           <InputGroupTextarea
             placeholder="Ask anything"
             autoFocus
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey && input.length > 0) {
+                send();
+              }
+            }}
           />
           <InputGroupAddon align="block-end">
             <InputGroupButton
@@ -64,18 +74,14 @@ export default function Page() {
               className="rounded-full ml-auto"
               size="icon-xs"
               disabled={input.length === 0}
-              onClick={(e) => {
-                e.preventDefault();
-                sendMessage({ text: input });
-                setInput("");
-              }}
+              onClick={() => send()}
             >
               <ArrowUpIcon />
               <span className="sr-only">Send</span>
             </InputGroupButton>
           </InputGroupAddon>
         </InputGroup>
-      </div>
+      </form>
     </main>
   );
 }
