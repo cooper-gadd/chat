@@ -9,27 +9,30 @@ export default async function Page({
 
   const messages = [
     {
-      content: "hello how do i make app",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       role: "user",
     },
     {
-      content: "what app",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       role: "assistant",
     },
     {
-      content: "a good one",
+      content:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       role: "user",
     },
   ];
 
   return (
-    <main className="p-3 md:p-5">
+    <main className="p-3 md:p-5 flex flex-col overflow-x-hidden">
       <div className="space-y-4">
         {messages.map((message, index) => (
           <div
             key={index}
             className={cn(
-              "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
+              "flex max-w-[75%] md:max-w-3xl flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word",
               message.role === "user"
                 ? "ml-auto bg-primary text-primary-foreground"
                 : "bg-muted",
