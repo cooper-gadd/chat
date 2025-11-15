@@ -11,9 +11,10 @@ import {
 import { ArrowUpIcon } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
 import { cn } from "@/lib/utils";
+import { MemoizedMarkdown } from "@/components/memoized-markdown";
 
 export default function Page() {
-  const { messages, sendMessage } = useChat();
+  const { messages, sendMessage } = useChat({ experimental_throttle: 50 });
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState<string>(suggestions[0].title);
   const suggestionOptions = suggestions.find(
@@ -23,7 +24,7 @@ export default function Page() {
   return (
     <main className="flex h-full justify-center items-center p-3 md:p-5 w-full flex-col">
       {messages.length > 0 ? (
-        <div className="flex-1 overflow-y-auto w-full max-w-3xl mx-auto">
+        <div className="flex-1 overflow-y-auto w-full max-w-3xl mx-auto pb-4">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
@@ -38,7 +39,13 @@ export default function Page() {
                 {message.parts.map((part, i) => {
                   switch (part.type) {
                     case "text":
-                      return <div key={`${message.id}-${i}`}>{part.text}</div>;
+                      return (
+                        <MemoizedMarkdown
+                          key={`${message.id}-${i}`}
+                          id={`${message.id}-${i}`}
+                          content={part.text}
+                        />
+                      );
                   }
                 })}
               </div>
