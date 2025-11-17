@@ -1,15 +1,16 @@
+import { Thread } from "@/db/schema";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  // BreadcrumbPage,
+  // BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
 
-export function Header() {
+export function Header({ thread }: { thread?: Thread }) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
       <div className="flex items-center gap-2 px-4">
@@ -21,12 +22,14 @@ export function Header() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">Chat</BreadcrumbLink>
+              <BreadcrumbLink href={`/${thread.id}`}>
+                {thread.title}
+              </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
+            {/*<BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
               <BreadcrumbPage>Nested Chat</BreadcrumbPage>
-            </BreadcrumbItem>
+            </BreadcrumbItem>*/}
           </BreadcrumbList>
         </Breadcrumb>
       </div>

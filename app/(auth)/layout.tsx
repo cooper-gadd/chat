@@ -1,6 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Header } from "@/components/header";
 import { getCurrentUser } from "@/actions/get-current-user";
 import { db } from "@/db";
 import { PendingMessageProvider } from "@/context/pending-message";
@@ -21,10 +20,7 @@ export default async function RootLayout({
     <SidebarProvider>
       <PendingMessageProvider>
         <AppSidebar currentUser={user} threads={threads} />
-        <SidebarInset>
-          <Header />
-          {children}
-        </SidebarInset>
+        <SidebarInset>{children}</SidebarInset>
       </PendingMessageProvider>
     </SidebarProvider>
   );
