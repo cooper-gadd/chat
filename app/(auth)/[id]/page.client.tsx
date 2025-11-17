@@ -14,11 +14,14 @@ import { Message as MessageType, Thread } from "@/db/schema";
 import { usePendingMessage } from "@/context/pending-message";
 import { Header } from "@/components/header";
 import { Messages } from "@/components/messages";
+import { ThreadHistory } from "@/actions/get-thread-history";
 
 export function PageClient({
   thread,
+  threadHistory,
 }: {
   thread: Thread & { messages: MessageType[] };
+  threadHistory: ThreadHistory[] | undefined;
 }) {
   const [input, setInput] = useState("");
   const { pendingMessage, setPendingMessage } = usePendingMessage();
@@ -63,7 +66,7 @@ export function PageClient({
 
   return (
     <>
-      <Header thread={thread} />
+      <Header thread={thread} threadHistory={threadHistory} />
       <main className="flex h-full justify-center items-center p-3 md:p-5 w-full flex-col">
         <div className="flex-1 overflow-y-auto w-full max-w-3xl mx-auto pb-4">
           <div className="space-y-4">

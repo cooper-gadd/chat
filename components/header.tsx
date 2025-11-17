@@ -4,13 +4,20 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  // BreadcrumbPage,
-  // BreadcrumbSeparator,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
+import { ThreadHistory } from "@/actions/get-thread-history";
 
-export function Header({ thread }: { thread: Thread }) {
+export function Header({
+  thread,
+  threadHistory,
+}: {
+  thread: Thread;
+  threadHistory: ThreadHistory[] | undefined;
+}) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
       <div className="flex items-center gap-2 px-4">
@@ -21,18 +28,38 @@ export function Header({ thread }: { thread: Thread }) {
         />
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href={`/${thread.id}`}>
-                {thread.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            {/*<BreadcrumbSeparator className="hidden md:block" />
+            <HistoryBreadcrumbs threadHistory={threadHistory} />
             <BreadcrumbItem>
-              <BreadcrumbPage>Nested Chat</BreadcrumbPage>
-            </BreadcrumbItem>*/}
+              <BreadcrumbPage>{thread.title}</BreadcrumbPage>
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
     </header>
+  );
+}
+
+function HistoryBreadcrumbs({
+  threadHistory,
+}: {
+  threadHistory: ThreadHistory[] | undefined;
+}) {
+  if (!threadHistory) return null;
+
+  return (
+    <>
+      {threadHistory.map((thread) => {
+        const { id, title } = thread;
+
+        return (
+          <>
+            <BreadcrumbItem key={id} className="hidden md:block">
+              <BreadcrumbLink href={`/${id}`}>{title}</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="hidden md:block" />
+          </>
+        );
+      })}
+    </>
   );
 }
