@@ -11,13 +11,43 @@ import { useChat } from "@ai-sdk/react";
 import { cn } from "@/lib/utils";
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
 import { Empty } from "@/components/empty";
+import { createThread } from "@/actions/create-thread";
+import { useThread } from "@/context/thread";
+import { DefaultChatTransport } from "ai";
+
+let currentThreadId: number | null = null;
 
 export default function Page() {
-  const { messages, sendMessage } = useChat({ experimental_throttle: 50 });
   const [input, setInput] = useState("");
+  const { threadId, setThreadId } = useThread();
 
-  function send() {
-    sendMessage({ text: input });
+  const { messages, sendMessage } = useChat({
+    experimental_throttle: 50,
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      prepareSendMessagesRequest({ messages }) {
+        return {
+          body: {
+            message: messages[messages.length - 1],
+            threadId: currentThreadId,
+          },
+        };
+      },
+    }),
+  });
+
+  async function send() {
+    if (input.length === 0) return;
+
+    if (!threadId) {
+      const newThreadId = await createThread({ title: input });
+      setThreadId(newThreadId);
+      currentThreadId = newThreadId;
+    } else {
+      currentThreadId = threadId;
+    }
+
+    await sendMessage({ text: input });
     setInput("");
   }
 

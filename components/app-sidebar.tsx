@@ -9,17 +9,26 @@ import { NavItems } from "./nav-items";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { CurrentUser } from "@/actions/get-current-user";
+import { Thread } from "@/db/schema";
 
-export function AppSidebar({ currentUser }: { currentUser: CurrentUser }) {
+export function AppSidebar({
+  currentUser,
+  threads,
+}: {
+  currentUser: CurrentUser;
+  threads: Thread[];
+}) {
   return (
     <Sidebar variant="inset">
-      <SidebarHeader>
-        <Button asChild>
-          <Link href="/">New Chat</Link>
-        </Button>
-      </SidebarHeader>
+      {threads.length > 0 ? (
+        <SidebarHeader>
+          <Button asChild>
+            <Link href="/">New Chat</Link>
+          </Button>
+        </SidebarHeader>
+      ) : null}
       <SidebarContent>
-        <NavItems />
+        <NavItems threads={threads} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser currentUser={currentUser} />
