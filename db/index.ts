@@ -1,7 +1,11 @@
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/bun-sql";
+import { drizzle } from "drizzle-orm/neon-http";
 import { SQL } from "bun";
 import * as schema from "./schema";
+import { neon } from "@neondatabase/serverless";
+import { config } from "dotenv";
+
+config({ path: ".env" });
 
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
@@ -17,4 +21,5 @@ if (process.env.NODE_ENV !== "production") {
   globalForDb.conn = conn;
 }
 
-export const db = drizzle({ client: conn, schema });
+const sql = neon(process.env.DATABASE_URL!);
+export const db = drizzle({ client: sql, schema });
