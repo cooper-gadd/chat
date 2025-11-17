@@ -29,7 +29,7 @@ export async function register({ createUser }: { createUser: CreateUser }) {
     .returning();
 
   const token = randomUUIDv7();
-  const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 days
+  const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2); // 2 days
   const cookieStore = await cookies();
 
   cookieStore.set("session", token, {

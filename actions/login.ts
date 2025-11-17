@@ -37,7 +37,7 @@ export async function login({
   await db.delete(sessions).where(eq(sessions.userId, user.id));
 
   const token = randomUUIDv7();
-  const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 days
+  const twoDays = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2); // 2 days
   const cookieStore = await cookies();
 
   cookieStore.set("session", token, {
