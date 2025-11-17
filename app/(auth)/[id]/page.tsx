@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { PageClient } from "./page.client";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -16,7 +17,7 @@ export default async function Page({
   });
 
   if (!thread) {
-    throw new Error("No thread found");
+    redirect("/");
   }
 
   return <PageClient thread={thread} />;

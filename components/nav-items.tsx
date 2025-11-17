@@ -1,5 +1,5 @@
 "use client";
-
+import { deleteThread } from "@/actions/delete-thread";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Thread } from "@/db/schema";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
+import { TrashIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function NavItems({ threads }: { threads: Thread[] }) {
   const pathname = usePathname();
@@ -21,15 +25,34 @@ export function NavItems({ threads }: { threads: Thread[] }) {
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {threads.map((item) => (
-            <SidebarMenuItem key={item.id}>
-              <SidebarMenuButton asChild isActive={pathname === `/${item.id}`}>
-                <a href={`/${item.id}`}>
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {threads.map((thread) => {
+            const isActive = pathname === `/${thread.id}`;
+
+            return (
+              <SidebarMenuItem key={thread.id} className="flex">
+                <SidebarMenuButton asChild isActive={isActive}>
+                  <Link href={`/${thread.id}`}>
+                    <span className="truncate">{thread.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+                <Button
+                  className={cn(
+                    "ml-auto transition-opacity",
+                    isActive
+                      ? "opacity-100"
+                      : "opacity-0 group-hover/menu-item:opacity-100",
+                  )}
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={async () => {
+                    await deleteThread({ threadId: thread.id });
+                  }}
+                >
+                  <TrashIcon className="text-destructive" />
+                </Button>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
