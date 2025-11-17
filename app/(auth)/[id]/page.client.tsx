@@ -13,7 +13,7 @@ import { DefaultChatTransport, UIMessage } from "ai";
 import { Message as MessageType, Thread } from "@/db/schema";
 import { usePendingMessage } from "@/context/pending-message";
 import { Header } from "@/components/header";
-import { Message } from "@/components/message";
+import { Messages } from "@/components/messages";
 
 export function PageClient({
   thread,
@@ -67,9 +67,7 @@ export function PageClient({
       <main className="flex h-full justify-center items-center p-3 md:p-5 w-full flex-col">
         <div className="flex-1 overflow-y-auto w-full max-w-3xl mx-auto pb-4">
           <div className="space-y-4">
-            {messages.map((message) => (
-              <Message key={message.id} message={message} />
-            ))}
+            <Messages messages={messages} threadId={thread.id} />
           </div>
         </div>
         <form className="w-full max-w-3xl" onSubmit={() => send()}>

@@ -100,6 +100,7 @@ export const messages = pgTable(
   "message",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    tag: varchar("tag", { length: 256 }).notNull(),
     threadId: integer("thread_id")
       .references(() => threads.id, {
         onDelete: "cascade",

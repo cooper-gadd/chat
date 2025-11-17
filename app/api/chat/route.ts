@@ -1,7 +1,13 @@
 import { db } from "@/db";
 import { google } from "@ai-sdk/google";
-import { streamText, convertToModelMessages, UIMessage } from "ai";
+import {
+  streamText,
+  convertToModelMessages,
+  UIMessage,
+  createIdGenerator,
+} from "ai";
 import { messages as messagesTable } from "@/db/schema";
+import { extractText } from "@/lib/utils";
 
 export const maxDuration = 30;
 
@@ -40,35 +46,28 @@ export async function POST(req: Request) {
 
   return result.toUIMessageStreamResponse({
     originalMessages: messages,
+    generateMessageId: createIdGenerator({ prefix: "msg", size: 16 }),
     async onFinish({ messages: finishedMessages }) {
-      const userMessage = message;
+      const userMessage = finishedMessages[finishedMessages.length - 2];
       const assistantMessage = finishedMessages[finishedMessages.length - 1];
 
-      let userText = "";
-      for (const part of userMessage.parts) {
-        if (part.type === "text") {
-          userText += part.text;
-        }
-      }
+      const userText = extractText(userMessage.parts);
+      const assistantText = extractText(assistantMessage.parts);
 
-      let assistantText = "";
-      for (const part of assistantMessage.parts) {
-        if (part.type === "text") {
-          assistantText += part.text;
-        }
-      }
-
-      await db.insert(messagesTable).values({
-        threadId,
-        role: userMessage.role,
-        content: userText,
-      });
-
-      await db.insert(messagesTable).values({
-        threadId,
-        role: assistantMessage.role,
-        content: assistantText,
-      });
+      await db.insert(messagesTable).values([
+        {
+          threadId,
+          role: userMessage.role,
+          content: userText,
+          tag: userMessage.id,
+        },
+        {
+          threadId,
+          role: assistantMessage.role,
+          content: assistantText,
+          tag: assistantMessage.id,
+        },
+      ]);
     },
   });
 }
