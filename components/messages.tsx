@@ -22,6 +22,7 @@ export function Messages({
   messages: UIMessage<unknown, UIDataTypes, UITools>[];
   threadId: number;
 }) {
+  console.log(messages);
   return (
     <>
       {messages.map((message) => (
@@ -98,6 +99,12 @@ export function Messages({
                       });
                       redirect(`/${newThreadId}`);
                     }}
+                    disabled={
+                      !message.parts.some(
+                        (p): p is { type: "text"; text: string } =>
+                          p.type === "text" && p.text.trim() !== "",
+                      )
+                    }
                   >
                     <GitBranchIcon className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                   </Button>
