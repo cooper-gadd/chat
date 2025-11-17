@@ -8,11 +8,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useThread } from "@/context/thread";
 import { Thread } from "@/db/schema";
+import { usePathname } from "next/navigation";
 
 export function NavItems({ threads }: { threads: Thread[] }) {
-  const { threadId, setThreadId } = useThread();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -23,13 +23,10 @@ export function NavItems({ threads }: { threads: Thread[] }) {
         <SidebarMenu>
           {threads.map((item) => (
             <SidebarMenuItem key={item.id}>
-              <SidebarMenuButton
-                onClick={() => {
-                  setThreadId(item.id);
-                }}
-                isActive={item.id === threadId}
-              >
-                <span>{item.title}</span>
+              <SidebarMenuButton asChild isActive={pathname === `/${item.id}`}>
+                <a href={`/${item.id}`}>
+                  <span>{item.title}</span>
+                </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

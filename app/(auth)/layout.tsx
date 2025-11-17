@@ -3,7 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Header } from "@/components/header";
 import { getCurrentUser } from "@/actions/get-current-user";
 import { db } from "@/db";
-import { ThreadProvider } from "@/context/thread";
+import { PendingMessageProvider } from "@/context/pending-message";
 
 export default async function RootLayout({
   children,
@@ -19,13 +19,13 @@ export default async function RootLayout({
 
   return (
     <SidebarProvider>
-      <ThreadProvider>
+      <PendingMessageProvider>
         <AppSidebar currentUser={user} threads={threads} />
         <SidebarInset>
           <Header />
           {children}
         </SidebarInset>
-      </ThreadProvider>
+      </PendingMessageProvider>
     </SidebarProvider>
   );
 }
