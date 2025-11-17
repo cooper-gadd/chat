@@ -6,7 +6,7 @@ import {
   InputGroupButton,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, CopyIcon, GitBranchIcon } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
 import { cn } from "@/lib/utils";
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
@@ -14,6 +14,13 @@ import { DefaultChatTransport, UIMessage } from "ai";
 import { Message, Thread } from "@/db/schema";
 import { usePendingMessage } from "@/context/pending-message";
 import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export function PageClient({
   thread,
@@ -71,24 +78,78 @@ export function PageClient({
               <div
                 key={message.id}
                 className={cn(
-                  "flex max-w-[85%] md:max-w-3xl flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word",
-                  message.role === "user"
-                    ? "ml-auto bg-primary text-primary-foreground"
-                    : "bg-muted",
+                  "group flex",
+                  message.role === "user" ? "justify-end" : "justify-start",
                 )}
               >
-                {message.parts.map((part, i) => {
-                  switch (part.type) {
-                    case "text":
-                      return (
-                        <MemoizedMarkdown
-                          key={`${message.id}-${i}`}
-                          id={`${message.id}-${i}`}
-                          content={part.text}
-                        />
-                      );
-                  }
-                })}
+                <div className="flex flex-col">
+                  <div
+                    className={cn(
+                      "inline-flex flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word md:max-w-3xl",
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted",
+                    )}
+                  >
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <MemoizedMarkdown
+                              key={`${message.id}-${i}`}
+                              id={`${message.id}-${i}`}
+                              content={part.text}
+                            />
+                          );
+                      }
+                    })}
+                  </div>
+                  <div
+                    className={cn(
+                      "flex gap-1 items-center mt-1  opacity-0 group-hover:opacity-100 transition-opacity",
+                      message.role === "user" ? "justify-end" : "justify-start",
+                    )}
+                  >
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8"
+                          onClick={() => {
+                            const textToCopy = message.parts
+                              .filter((part) => part.type === "text")
+                              .map((part) => part.text)
+                              .join("\n");
+                            navigator.clipboard
+                              .writeText(textToCopy)
+                              .then(() => {
+                                toast("Copied to clipboard!");
+                              })
+                              .catch((err) => {
+                                toast.error("Failed to copy: ", err);
+                              });
+                          }}
+                        >
+                          <CopyIcon className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Copy</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8">
+                          <GitBranchIcon className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Branch off</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
