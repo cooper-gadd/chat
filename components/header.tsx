@@ -1,4 +1,4 @@
-import { Thread } from "@/db/schema";
+import { Message, Thread } from "@/db/schema";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,14 +9,15 @@ import {
 } from "./ui/breadcrumb";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
-import { ThreadHistory } from "@/actions/get-thread-history";
 
 export function Header({
   thread,
-  threadHistory,
 }: {
-  thread: Thread;
-  threadHistory: ThreadHistory[] | undefined;
+  thread: Thread & { messages: Message[] } & {
+    parent: Thread | null;
+  } & {
+    children: Thread[];
+  };
 }) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2">
@@ -28,7 +29,16 @@ export function Header({
         />
         <Breadcrumb>
           <BreadcrumbList>
-            <HistoryBreadcrumbs threadHistory={threadHistory} />
+            {thread.parent ? (
+              <>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href={`/${thread.parent.id}`}>
+                    {thread.parent.title}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+              </>
+            ) : null}
             <BreadcrumbItem>
               <BreadcrumbPage>{thread.title}</BreadcrumbPage>
             </BreadcrumbItem>
@@ -36,30 +46,5 @@ export function Header({
         </Breadcrumb>
       </div>
     </header>
-  );
-}
-
-function HistoryBreadcrumbs({
-  threadHistory,
-}: {
-  threadHistory: ThreadHistory[] | undefined;
-}) {
-  if (!threadHistory) return null;
-
-  return (
-    <>
-      {threadHistory.map((thread) => {
-        const { id, title } = thread;
-
-        return (
-          <>
-            <BreadcrumbItem key={id} className="hidden md:block">
-              <BreadcrumbLink href={`/${id}`}>{title}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-          </>
-        );
-      })}
-    </>
   );
 }

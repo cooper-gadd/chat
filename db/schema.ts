@@ -1,5 +1,6 @@
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 import {
+  AnyPgColumn,
   index,
   integer,
   pgEnum,
@@ -72,7 +73,13 @@ export const threads = pgTable(
       })
       .notNull(),
     title: varchar("title", { length: 256 }).notNull(),
-    parentThreadId: integer("parent_thread_id"), //for branching off referencing
+    parentThreadId: integer("parent_thread_id").references(
+      (): AnyPgColumn => threads.id,
+      {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      },
+    ),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -88,6 +95,12 @@ export const threadRelations = relations(threads, ({ one, many }) => ({
     references: [users.id],
   }),
   messages: many(messages),
+  parent: one(threads, {
+    fields: [threads.parentThreadId],
+    references: [threads.id],
+    relationName: "threadHierarchy",
+  }),
+  children: many(threads, { relationName: "threadHierarchy" }),
 }));
 
 export type CreateThread = InferInsertModel<typeof threads>;

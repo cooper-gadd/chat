@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import { PageClient } from "./page.client";
 import { redirect } from "next/navigation";
-import { getThreadHistory, ThreadHistory } from "@/actions/get-thread-history";
 
 export default async function Page({
   params,
@@ -14,6 +13,8 @@ export default async function Page({
     where: (thread, { eq }) => eq(thread.id, Number(id)),
     with: {
       messages: true,
+      parent: true,
+      children: true,
     },
   });
 
@@ -21,15 +22,5 @@ export default async function Page({
     redirect("/");
   }
 
-  let threadHistory: ThreadHistory[] | undefined = undefined;
-
-  if (thread.parentThreadId) {
-    const res = await getThreadHistory({
-      threadId: thread.parentThreadId,
-    });
-
-    threadHistory = res;
-  }
-
-  return <PageClient thread={thread} threadHistory={threadHistory} />;
+  return <PageClient thread={thread} />;
 }

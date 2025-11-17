@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { google } from "@ai-sdk/google";
+import { openai } from "@ai-sdk/openai";
 import {
   streamText,
   convertToModelMessages,
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   const messages = [...previousMessages, message];
 
   const result = streamText({
-    model: google("gemini-2.0-flash-lite"),
+    model: openai("gpt-5-nano"),
     messages: convertToModelMessages(messages),
   });
 
