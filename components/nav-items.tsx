@@ -29,7 +29,7 @@ export function NavItems({ threads }: { threads: Thread[] }) {
             const isActive = pathname === `/${thread.id}`;
 
             return (
-              <SidebarMenuItem key={thread.id} className="flex">
+              <SidebarMenuItem key={thread.id} className="flex gap-1">
                 <SidebarMenuButton asChild isActive={isActive}>
                   <Link href={`/${thread.id}`}>
                     <span className="truncate">{thread.title}</span>
