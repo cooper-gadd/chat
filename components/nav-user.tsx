@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, GithubIcon, LogOut } from "lucide-react";
+import { ChevronsUpDown, GithubIcon, LogOut, Palette, Check } from "lucide-react";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -11,6 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
@@ -21,9 +24,18 @@ import {
 import Link from "next/link";
 import { CurrentUser } from "@/actions/get-current-user";
 import { logout } from "@/actions/logout";
+import { useThemeColor, THEME_COLORS } from "@/context/theme-color";
+import { updateThemeColor } from "@/actions/update-theme-color";
+import { ThemeColor } from "@/db/schema";
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
+  const { themeColor, setThemeColor } = useThemeColor();
+
+  const handleThemeColorChange = async (color: ThemeColor) => {
+    setThemeColor(color);
+    await updateThemeColor(color);
+  };
 
   return (
     <SidebarMenu>
@@ -73,6 +85,29 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Palette />
+                  Theme Color
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {THEME_COLORS.map((theme) => (
+                    <DropdownMenuItem
+                      key={theme.value}
+                      onClick={() => handleThemeColorChange(theme.value)}
+                    >
+                      <div
+                        className="h-4 w-4 rounded-full border"
+                        style={{ backgroundColor: theme.color }}
+                      />
+                      {theme.label}
+                      {themeColor === theme.value && (
+                        <Check className="ml-auto h-4 w-4" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
               <DropdownMenuItem asChild>
                 <Link href="http://github.com/cooper-gadd/chat" target="_blank">
                   <GithubIcon />
