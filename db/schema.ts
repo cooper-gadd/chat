@@ -26,9 +26,10 @@ export const users = pgTable(
   ],
 );
 
-export const userRelations = relations(users, ({ many }) => ({
+export const userRelations = relations(users, ({ many, one }) => ({
   sessions: many(sessions),
   threads: many(threads),
+  preferences: one(userPreferences),
 }));
 
 export type CreateUser = InferInsertModel<typeof users>;
@@ -138,3 +139,38 @@ export const messageRelations = relations(messages, ({ one }) => ({
 export type CreateMessage = InferInsertModel<typeof messages>;
 export type Message = InferSelectModel<typeof messages>;
 export type UpdateMessage = Partial<CreateMessage>;
+
+export const themeColorEnum = pgEnum("theme_color", [
+  "default",
+  "blue",
+  "green",
+  "purple",
+  "orange",
+  "rose",
+]);
+
+export const userPreferences = pgTable("user_preferences", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: integer("user_id")
+    .references(() => users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull()
+    .unique(),
+  themeColor: themeColorEnum("theme_color").default("default").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(users, {
+    fields: [userPreferences.userId],
+    references: [users.id],
+  }),
+}));
+
+export type CreateUserPreferences = InferInsertModel<typeof userPreferences>;
+export type UserPreferences = InferSelectModel<typeof userPreferences>;
+export type UpdateUserPreferences = Partial<CreateUserPreferences>;
+export type ThemeColor = (typeof themeColorEnum.enumValues)[number];
