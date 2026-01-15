@@ -9,6 +9,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -21,9 +23,18 @@ import {
 import Link from "next/link";
 import { CurrentUser } from "@/actions/get-current-user";
 import { logout } from "@/actions/logout";
+import { useTheme } from "next-themes";
+
+const themeOptions = [
+  { label: "System", value: "system" },
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+  { label: "Aurora", value: "aurora" },
+];
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
+  const { theme = "system", setTheme } = useTheme();
 
   return (
     <SidebarMenu>
@@ -71,6 +82,20 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Theme</DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={theme}
+                onValueChange={(value) => setTheme(value)}
+              >
+                {themeOptions.map((option) => (
+                  <DropdownMenuRadioItem key={option.value} value={option.value}>
+                    {option.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
