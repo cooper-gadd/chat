@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import { CurrentUser } from "@/actions/get-current-user";
 import { logout } from "@/actions/logout";
+import { ThemeColorSelector } from "@/components/theme-color-selector";
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
@@ -80,6 +81,7 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <ThemeColorSelector />
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
