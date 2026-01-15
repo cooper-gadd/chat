@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsUpDown, GithubIcon, LogOut } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -9,6 +10,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -24,6 +27,7 @@ import { logout } from "@/actions/logout";
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
 
   return (
     <SidebarMenu>
@@ -80,6 +84,25 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Theme</DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={theme ?? "system"}
+              onValueChange={setTheme}
+            >
+              <DropdownMenuRadioItem value="system">
+                System
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="light">
+                Light
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">
+                Dark
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="ocean">
+                Ocean
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
