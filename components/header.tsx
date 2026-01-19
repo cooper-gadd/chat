@@ -9,6 +9,7 @@ import {
 } from "./ui/breadcrumb";
 import { Separator } from "./ui/separator";
 import { SidebarTrigger } from "./ui/sidebar";
+import { ThemeSelector } from "./theme-selector";
 
 export function Header({
   thread,
@@ -20,7 +21,7 @@ export function Header({
   };
 }) {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2">
+    <header className="flex h-16 shrink-0 items-center gap-2 justify-between">
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -44,6 +45,9 @@ export function Header({
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+      <div className="flex items-center gap-2 px-4">
+        <ThemeSelector />
       </div>
     </header>
   );
