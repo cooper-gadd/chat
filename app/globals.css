@@ -112,6 +112,85 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Theme Color Variants */
+
+/* Default theme (neutral) - already defined above */
+
+/* Blue theme */
+[data-theme-color="blue"] {
+  --primary: oklch(0.205 0 250);
+  --primary-foreground: oklch(0.985 0 250);
+  --accent: oklch(0.54 0.192 253.002);
+  --accent-foreground: oklch(0.985 0 250);
+}
+
+[data-theme-color="blue"].dark {
+  --primary: oklch(0.522 0.213 253.002);
+  --primary-foreground: oklch(0.205 0 250);
+  --accent: oklch(0.488 0.243 264.376);
+  --accent-foreground: oklch(0.985 0 250);
+}
+
+/* Green theme */
+[data-theme-color="green"] {
+  --primary: oklch(0.205 0 150);
+  --primary-foreground: oklch(0.985 0 150);
+  --accent: oklch(0.54 0.192 150.002);
+  --accent-foreground: oklch(0.985 0 150);
+}
+
+[data-theme-color="green"].dark {
+  --primary: oklch(0.522 0.213 150.002);
+  --primary-foreground: oklch(0.205 0 150);
+  --accent: oklch(0.488 0.243 144.376);
+  --accent-foreground: oklch(0.985 0 150);
+}
+
+/* Purple theme */
+[data-theme-color="purple"] {
+  --primary: oklch(0.205 0 275);
+  --primary-foreground: oklch(0.985 0 275);
+  --accent: oklch(0.54 0.192 275.002);
+  --accent-foreground: oklch(0.985 0 275);
+}
+
+[data-theme-color="purple"].dark {
+  --primary: oklch(0.522 0.213 275.002);
+  --primary-foreground: oklch(0.205 0 275);
+  --accent: oklch(0.488 0.243 284.376);
+  --accent-foreground: oklch(0.985 0 275);
+}
+
+/* Orange theme */
+[data-theme-color="orange"] {
+  --primary: oklch(0.205 0 50);
+  --primary-foreground: oklch(0.985 0 50);
+  --accent: oklch(0.54 0.192 50.002);
+  --accent-foreground: oklch(0.205 0 50);
+}
+
+[data-theme-color="orange"].dark {
+  --primary: oklch(0.522 0.213 50.002);
+  --primary-foreground: oklch(0.205 0 50);
+  --accent: oklch(0.488 0.243 44.376);
+  --accent-foreground: oklch(0.985 0 50);
+}
+
+/* Rose theme */
+[data-theme-color="rose"] {
+  --primary: oklch(0.205 0 10);
+  --primary-foreground: oklch(0.985 0 10);
+  --accent: oklch(0.54 0.192 10.002);
+  --accent-foreground: oklch(0.985 0 10);
+}
+
+[data-theme-color="rose"].dark {
+  --primary: oklch(0.522 0.213 10.002);
+  --primary-foreground: oklch(0.205 0 10);
+  --accent: oklch(0.488 0.243 4.376);
+  --accent-foreground: oklch(0.985 0 10);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
