@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsUpDown, GithubIcon, LogOut } from "lucide-react";
+import { ChatThemeSelector } from "@/components/chat-theme-selector";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -73,6 +74,7 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <ChatThemeSelector variant="sidebar" />
               <DropdownMenuItem asChild>
                 <Link href="http://github.com/cooper-gadd/chat" target="_blank">
                   <GithubIcon />

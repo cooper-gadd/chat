@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ChatThemeProvider } from "@/context/chat-theme";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -35,8 +36,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <ChatThemeProvider>
+            {children}
+            <Toaster />
+          </ChatThemeProvider>
         </ThemeProvider>
       </body>
     </html>
