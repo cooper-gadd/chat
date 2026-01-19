@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { UIDataTypes, UIMessage, UITools } from "ai";
 import { branchOff } from "@/actions/branch-off";
 import { redirect } from "next/navigation";
+import { useChatTheme } from "@/context/chat-theme";
 
 export function Messages({
   messages,
@@ -23,6 +24,8 @@ export function Messages({
   threadId: number;
 }) {
   console.log(messages);
+  const { currentTheme } = useChatTheme();
+
   return (
     <>
       {messages.map((message) => (
@@ -38,8 +41,8 @@ export function Messages({
               className={cn(
                 "inline-flex flex-col gap-2 rounded-lg px-3 py-2 text-sm wrap-break-word md:max-w-3xl",
                 message.role === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted",
+                  ? `${currentTheme.userMessage.background} ${currentTheme.userMessage.text}`
+                  : `${currentTheme.assistantMessage.background} ${currentTheme.assistantMessage.text}`,
               )}
             >
               {message.parts.map((part, i) => {
