@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronsUpDown, GithubIcon, LogOut } from "lucide-react";
+import { ChevronsUpDown, GithubIcon, LogOut, Palette } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -11,6 +12,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
@@ -24,6 +28,7 @@ import { logout } from "@/actions/logout";
 
 export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
   const { isMobile } = useSidebar();
+  const { theme, setTheme } = useTheme();
 
   return (
     <SidebarMenu>
@@ -71,6 +76,37 @@ export function NavUser({ currentUser }: { currentUser: CurrentUser }) {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Palette className="mr-2 h-4 w-4" />
+                <span>Theme</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  <span className={theme === "light" ? "font-bold" : ""}>
+                    Light
+                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  <span className={theme === "dark" ? "font-bold" : ""}>
+                    Dark
+                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("harry-potter")}>
+                  <span
+                    className={theme === "harry-potter" ? "font-bold" : ""}
+                  >
+                    🪄 Harry Potter
+                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  <span className={theme === "system" ? "font-bold" : ""}>
+                    System
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
